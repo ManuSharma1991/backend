@@ -1,0 +1,22 @@
+{
+  "name": "budget_backend_only",
+  "version": "1.0.0",
+  "description": "Node backend for Budget MEAN Stack application",
+  "main": "app.js",
+  "private": true,
+  "keywords": [
+    "Node.js",
+    "MEAN",
+    "Angular",
+    "Express.js",
+    "MongoDB"
+  ],
+  "dependencies": {
+    "assert": "^2.0.0",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.3.12"
+  }
+}
