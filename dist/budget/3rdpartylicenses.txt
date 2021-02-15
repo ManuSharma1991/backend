@@ -177,6 +177,8 @@ THE SOFTWARE.
 
 ionic-loader
 
+ngx-device-detector
+
 regenerator-runtime
 MIT
 MIT License
