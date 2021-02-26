@@ -3,7 +3,7 @@ const port = process.env.PORT || 3000
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
-
+const compression = require('compression');
 
 const app = express();
 
@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }))
 app.use(bodyParser.json())
+app.use(compression())
 var distDir = __dirname + "/dist/budget/";
 app.use(express.static(distDir));
 let test_string = {};
