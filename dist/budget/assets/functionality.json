@@ -1,0 +1,217 @@
+{
+    "create_budget": {
+        "variables": {
+            "budget_name": "string",
+            "budget_currency": "all caps 3 character string"
+        },
+        "functionality": "given the variables, the function will create a budget_id and returns the newly created object as response"
+    },
+    "view_budgets": {
+        "variables": {},
+        "functionality": "the function will create a list of all budgets available in the database and returns them as response"
+    },
+    "update_budget": {
+        "variables": {
+            "budget_id": "(MANDATORY) integer",
+            "budget_name": "string",
+            "budget_currency": "all caps 3 character string"
+        },
+        "functionality": "given the variables, the function will update the data of given budget_id and returns the updated object as response"
+    },
+    "delete_budget": {
+        "variables": {
+            "budget_id": "(MANDATORY) integer"
+        },
+        "functionality": "given the budget_id, the function will SOFT delete the data of given budget_id and returns boolean response"
+    },
+    "create_account": {
+        "variables": {
+            "account_name": "string",
+            "account_type": "string",
+            "account_initial_balance": "integer (maximum 9 digits)"
+        },
+        "functionality": "given the variables, the function will create a account_id and returns the newly created object as response"
+    },
+    "view_accounts": {
+        "variables": {},
+        "functionality": "the function will create a list of all accounts available in the database and returns them as response"
+    },
+    "update_account": {
+        "variables": {
+            "account_id": "(MANDATORY) integer",
+            "account_name": "string",
+            "account_type": "string"
+        },
+        "functionality": "given the variables, the function will update the data of given account_id and returns the updated object as response"
+    },
+    "delete_account": {
+        "variables": {
+            "account_id": "(MANDATORY) integer"
+        },
+        "functionality": "given the budget_id, the function will SOFT delete the data of given account_id and returns boolean response"
+    },
+    "create_category": {
+        "variables": {
+            "category_name": "string"
+        },
+        "functionality": "given the variables, the function will create a category_id and returns the newly created object as response"
+    },
+    "view_categories": {
+        "variables": {},
+        "functionality": "the function will create a list of all categories available in the database and returns them as response"
+    },
+    "update_category": {
+        "variables": {
+            "category_id": "(MANDATORY) integer",
+            "category_name": "string"
+        },
+        "functionality": "given the variables, the function will update the data of given category_id and returns the updated object as response"
+    },
+    "delete_category": {
+        "variables": {
+            "category_id": "(MANDATORY) integer"
+        },
+        "functionality": "given the category_id, the function will SOFT delete the data of given category_id and returns boolean response"
+    },
+    "create_sub_category": {
+        "variables": {
+            "sub_category_name": "string"
+        },
+        "functionality": "given the variables, the function will create a sub_category_id and returns the newly created object as response"
+    },
+    "view_sub_categories": {
+        "variables": {},
+        "functionality": "the function will create a list of all sub_categories available in the database and returns them as response"
+    },
+    "update_sub_category": {
+        "variables": {
+            "sub_category_id": "(MANDATORY) integer",
+            "sub_category_name": "string"
+        },
+        "functionality": "given the variables, the function will update the data of given sub_category_id and returns the updated object as response"
+    },
+    "delete_sub_category": {
+        "variables": {
+            "sub_category_id": "(MANDATORY) integer"
+        },
+        "functionality": "given the sub_category_id, the function will SOFT delete the data of given sub_category_id and returns boolean response"
+    },
+    "get_budget_by_id": {
+        "variables": {
+            "budget_id": "(MANDATORY) integer"
+        },
+        "functionality": "given the budget_id, the function will return the budget object as response"
+    },
+    "get_account_by_id": {
+        "variables": {
+            "account_id": "(MANDATORY) integer"
+        },
+        "functionality": "given the account_id, the function will return the account object as response"
+    },
+    "get_category_by_id": {
+        "variables": {
+            "category_id": "(MANDATORY) integer"
+        },
+        "functionality": "given the category_id, the function will return the category object as response"
+    },
+    "get_sub_category_by_id": {
+        "variables": {
+            "sub_category_id": "(MANDATORY) integer"
+        },
+        "functionality": "given the sub_category_id, the function will return the sub_category object as response"
+    },
+    "create_transaction": {
+        "variables": {
+            "transaction_budget_id": "integer",
+            "transaction_date": "date",
+            "transaction_description": "string",
+            "transaction_value": "single | equally divided multiple | unequally divided multiple",
+            "transaction_category": "single | equally divided multiple | unequally divided multiple",
+            "transaction_sub_category": "single | equally divided multiple | unequally divided multiple",
+            "transacted_account_id": "single | equally divided multiple | unequally divided multiple"
+        },
+        "functionality": "given the variables, the function will create a transaction_id, update the current budget allocation and returns the newly updated current budget allocation object as response"
+    },
+    "quick_view_transactions_by_budget": {
+        "variables": {
+            "budget_id": "(MANDATORY) integer"
+        },
+        "functionality": "the function will return the last 10 transactions of the given budget_id in a list object as response"
+    },
+    "quick_view_transactions_by_account": {
+        "variables": {
+            "account_id": "(MANDATORY) integer"
+        },
+        "functionality": "the function will return the last 10 transactions of the given account_id in a list object as response"
+    },
+    "quick_view_transactions_by_category": {
+        "variables": {
+            "category_id": "(MANDATORY) integer"
+        },
+        "functionality": "the function will return the last 10 transactions of the given category_id in a list object as response"
+    },
+    "quick_view_transactions_by_sub_category": {
+        "variables": {
+            "sub_category_id": "(MANDATORY) integer"
+        },
+        "functionality": "the function will return the last 10 transactions of the given sub_category_id in a list object as response"
+    },
+    "view_dated_transactions": {
+        "variables": {
+            "from_date": "date",
+            "to_date": "date"
+        },
+        "functionality": "the function will return the transactions in the given period in a list object as response"
+    },
+    "view_transactions_by_category": {
+        "variables": {
+            "category_id": "(MANDATORY) integer",
+            "from_date": "date",
+            "to_date": "date"
+        },
+        "functionality": "the function will return the transactions of given category_id in the given period in a list object as response"
+    },
+    "view_transactions_by_sub_category": {
+        "variables": {
+            "sub_category_id": "(MANDATORY) integer",
+            "from_date": "date",
+            "to_date": "date"
+        },
+        "functionality": "the function will return the transactions of given sub_category_id in the given period in a list object as response"
+    },
+    "view_transactions_by_budget": {
+        "variables": {
+            "budget_id": "(MANDATORY) integer"
+        },
+        "functionality": "the function will return all the transactions of the given budget_id in a list object as response (paginated with server-side pagination)"
+    },
+    "view_transactions_by_account": {
+        "variables": {
+            "account_id": "(MANDATORY) integer"
+        },
+        "functionality": "the function will return all the transactions of the given account_id in a list object as response (paginated with server-side pagination)"
+    },
+    "update_transactions": {
+        "variables": {
+            "transaction_id": "(MANDATORY) integer",
+            "transaction_budget_id": "integer",
+            "transaction_date": "date",
+            "transaction_description": "string",
+            "transaction_value": "single | equally divided multiple | unequally divided multiple",
+            "transaction_category": "single | equally divided multiple | unequally divided multiple",
+            "transaction_sub_category": "single | equally divided multiple | unequally divided multiple",
+            "transacted_account_id": "single | equally divided multiple | unequally divided multiple"
+        },
+        "functionality": "given the variables, the function will update data of the given transaction_id, update the current budget allocation and returns the newly updated current budget allocation object as response"
+    },
+    "delete_transaction": {
+        "variables": {
+            "transaction_id": "(MANDATORY) integer"
+        },
+        "functionality": "given the variables, the function will delete data of the given transaction_id, update the current budget allocation and returns the newly updated current budget allocation object as response"
+    },
+    "create_budget_allocation": "",
+    "modify_budget_allocation": "",
+    "copy_budget_allocation": "",
+    "reset_budget_allocation": ""
+}
