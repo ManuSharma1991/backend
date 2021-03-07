@@ -11,6 +11,11 @@
     "Express.js",
     "MongoDB"
   ],
+  "scripts": {
+    "start": "node app.js",
+    "dev": "set NODE_ENV=development&& node app.js",
+    "prod": "set NODE_ENV=production&& node app.js"
+  },
   "dependencies": {
     "assert": "^2.0.0",
     "body-parser": "^1.18.3",
@@ -18,6 +23,7 @@
     "express": "^4.16.4",
     "mongodb": "^3.6.4",
     "mongoose": "^5.3.12",
-    "compression": "^1.7.4"
+    "compression": "^1.7.4",
+    "dotenv": "8.2.0"
   }
 }
