@@ -9,6 +9,8 @@ const AccountRouter = require("./src/routers/account.router");
 const CategoryRouter = require("./src/routers/category.router");
 const SubCategoryRouter = require("./src/routers/sub_category.router");
 const UserRouter = require("./src/routers/user.router");
+const AllocationRouter = require("./src/routers/allocation.router");
+const TransactionRouter = require("./src/routers/transaction.router");
 
 const port = process.env.PORT || 3000
 const app = express();
@@ -25,7 +27,9 @@ app.use(UserRouter)
 app.use(BudgetRouter);
 app.use(AccountRouter);
 app.use(CategoryRouter);
-app.use(SubCategoryRouter)
+app.use(SubCategoryRouter);
+app.use(AllocationRouter);
+app.use(TransactionRouter);
 app.listen(port, () => {
     console.log("Server is listening on port" + port);
 });

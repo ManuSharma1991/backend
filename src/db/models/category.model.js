@@ -14,6 +14,8 @@ const CategorySchema = new mongoose.Schema({
         default: true
     },
     sub_category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' }],
+    allocation: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Allocation' }],
+    transaction: [{ type: mongoose.Schema.Types.ObjectId, ref: 'transaction' }],
     user: {
         type: mongoose.Schema.Types.ObjectId, ref: 'User'
     }

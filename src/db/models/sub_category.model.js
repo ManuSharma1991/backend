@@ -18,7 +18,9 @@ const SubCategorySchema = new mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.Types.ObjectId, ref: 'User'
-    }
+    },
+    allocation: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Allocation' }],
+    transaction: [{ type: mongoose.Schema.Types.ObjectId, ref: 'transaction' }],
 });
 
 SubCategorySchema.set('timestamps', true);
