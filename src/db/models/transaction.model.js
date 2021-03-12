@@ -6,12 +6,10 @@ const TransactionSchema = new mongoose.Schema({
         type: Number,
     },
     transaction_date: {
-        type: Date,
-        required: true
+        type: Date
     },
     transaction_value: {
-        type: Number,
-        required: true
+        type: Number
     },
     transaction_description: {
         type: String
