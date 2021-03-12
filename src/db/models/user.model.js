@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
     category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
     sub_category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' }],
     allocation: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Allocation' }],
-    transaction: [{ type: mongoose.Schema.Types.ObjectId, ref: 'transaction' }],
+    transaction: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction' }],
 });
 
 

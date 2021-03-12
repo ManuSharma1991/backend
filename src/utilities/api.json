@@ -1,0 +1,222 @@
+[
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/createUser",
+        "request_json": {
+            "user_name": "Manu Sharma",
+            "user_mobile_no": 9110783433
+        }
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/createBudget",
+        "request_json": {
+            "budget": {
+                "budget_id": 2,
+                "budget_name": "Savings",
+                "budget_currency": "INR"
+            },
+            "user": {
+                "user_id": 90000001
+            }
+        }
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/createAccount",
+        "request_json": {
+            "account": {
+                "account_name": "HDFC",
+                "account_type": "current",
+                "account_initial_balance": 600
+            },
+            "user": {
+                "user_id": 90000001
+            }
+        }
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/createCategory",
+        "request_json": {
+            "category": {
+                "category_name": "transportation"
+            },
+            "user": {
+                "user_id": 90000001
+            }
+        }
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/createSubCategory",
+        "request_json": {
+            "category": {
+                "category_id": 1001
+            },
+            "sub_category": {
+                "sub_category_name": "bike_wash"
+            },
+            "user": {
+                "user_id": 90000001
+            }
+        }
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/createAllocation",
+        "request_json": [
+            {
+                "allocation": {
+                    "allocation_month": 2,
+                    "allocated_per_sub_category": 1200,
+                    "spent_per_sub_category": 650
+                },
+                "budget": {
+                    "budget_id": 1
+                },
+                "user": {
+                    "user_id": 90000001
+                },
+                "category": {
+                    "category_id": 1001
+                },
+                "sub_category": {
+                    "sub_category_id": 10001
+                }
+            },
+            {
+                "allocation": {
+                    "allocation_month": 2,
+                    "allocated_per_sub_category": 1500,
+                    "spent_per_sub_category": 850
+                },
+                "budget": {
+                    "budget_id": 1
+                },
+                "user": {
+                    "user_id": 90000001
+                },
+                "category": {
+                    "category_id": 1001
+                },
+                "sub_category": {
+                    "sub_category_id": 10002
+                }
+            },
+            {
+                "allocation": {
+                    "allocation_month": 2,
+                    "allocated_per_sub_category": 2200,
+                    "spent_per_sub_category": 1250
+                },
+                "budget": {
+                    "budget_id": 1
+                },
+                "user": {
+                    "user_id": 90000001
+                },
+                "category": {
+                    "category_id": 1002
+                },
+                "sub_category": {
+                    "sub_category_id": 10003
+                }
+            },
+            {
+                "allocation": {
+                    "allocation_month": 2,
+                    "allocated_per_sub_category": 2500,
+                    "spent_per_sub_category": 1850
+                },
+                "budget": {
+                    "budget_id": 1
+                },
+                "user": {
+                    "user_id": 90000001
+                },
+                "category": {
+                    "category_id": 1002
+                },
+                "sub_category": {
+                    "sub_category_id": 10004
+                }
+            }
+        ]
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/recordTransaction",
+        "request_json": {
+            "transaction": {
+                "transaction_date": "09-03-2021",
+                "transaction_value": 990,
+                "transaction_description": "Test Transaction 1"
+            },
+            "budget": {
+                "budget_id": 1
+            },
+            "user": {
+                "user_id": 90000001
+            },
+            "category": {
+                "category_id": 1001
+            },
+            "sub_category": {
+                "sub_category_id": 10001
+            }
+        }
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getUser",
+        "request_json": ""
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getBudget",
+        "request_json": ""
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getAccount",
+        "request_json": ""
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getCategory",
+        "request_json": ""
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getSubCategory",
+        "request_json": ""
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getAllocation",
+        "request_json": ""
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getTransaction",
+        "request_json": ""
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getUserById",
+        "request_json": {
+            "user_id": 90000001
+        }
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getBudgetById",
+        "request_json": {
+            "budget_id": 1
+        }
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getAccountById",
+        "request_json": {
+            "account_id": 101
+        }
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getCategoryById",
+        "request_json": {
+            "request_url": "",
+            "request_json": ""
+        }
+    },
+    {
+        "request_url": "https://budget-manu.azurewebsites.net/getSubCategoryById",
+        "request_json": {
+            "sub_category_id": 10001
+        }
+    }
+]

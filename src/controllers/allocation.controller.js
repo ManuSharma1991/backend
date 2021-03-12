@@ -71,7 +71,6 @@ const getAllocationByMonth = function getAllocationByMonth(req, res, next) {
         .populate('category', ' category_id category_name -_id')
         .populate('sub_category', 'sub_category_id sub_category_name -_id')
         .then(allocation => {
-            console.log(allocation[0].category.category_name)
             res.send(allocation);
         })
         .catch(err => {

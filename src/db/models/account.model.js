@@ -26,7 +26,10 @@ const AccountSchema = new mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.Types.ObjectId, ref: 'User'
-    }
+    },
+    account_transaction: [{
+        type: mongoose.Schema.Types.ObjectId, ref: 'AccountTransaction'
+    }]
 });
 
 AccountSchema.set('timestamps', true)

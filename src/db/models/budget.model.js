@@ -20,7 +20,7 @@ const BudgetSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, ref: 'User'
     },
     allocation: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Allocation' }],
-    transaction: [{ type: mongoose.Schema.Types.ObjectId, ref: 'transaction' }],
+    transaction: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction' }],
 });
 
 BudgetSchema.set('timestamps', true)
