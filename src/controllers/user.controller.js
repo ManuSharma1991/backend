@@ -1,7 +1,7 @@
 const Account = require('../db/models/account.model');
 const Budget = require('../db/models/budget.model');
 const Category = require('../db/models/category.model');
-const SubCategory = require('../db/models/sub_category.model');
+const SubCategory = require('../db/models/subCategory.model');
 const User = require('../db/models/user.model');
 
 
@@ -67,9 +67,9 @@ async function populateUserData(user) {
         })
     await SubCategory.find({ 'user': user._id })
         .populate('category')
-        .then(async function (sub_category) {
-            await sub_category.forEach(s_category => {
-                user.sub_category.push(s_category);
+        .then(async function (subCategory) {
+            await subCategory.forEach(s_category => {
+                user.subCategory.push(s_category);
             })
         })
 }

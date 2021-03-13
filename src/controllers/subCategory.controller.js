@@ -1,13 +1,13 @@
 const Category = require('../db/models/category.model');
-const SubCategory = require('../db/models/sub_category.model');
+const SubCategory = require('../db/models/subCategory.model');
 const User = require('../db/models/user.model');
 
 const getSubCategory = function getSubCategory(req, res, next) {
     SubCategory.find()
         .populate('user')
         .populate('category')
-        .then(sub_category => {
-            res.send(sub_category);
+        .then(subCategory => {
+            res.send(subCategory);
         })
         .catch(err => {
             res.status(500).send({
@@ -18,7 +18,7 @@ const getSubCategory = function getSubCategory(req, res, next) {
 
 
 const createSubCategory = function createSubCategory(req, res, next) {
-    const new_sub_category = new SubCategory(req.body.sub_category);
+    const new_sub_category = new SubCategory(req.body.subCategory);
 
     Category.findOne(req.body.category)
         .then(category => {
@@ -31,8 +31,8 @@ const createSubCategory = function createSubCategory(req, res, next) {
         });
 
     new_sub_category.save(new_sub_category)
-        .then(sub_category => {
-            res.send(sub_category);
+        .then(subCategory => {
+            res.send(subCategory);
         })
         .catch(err => {
             res.status(500).send({
@@ -45,8 +45,8 @@ const createSubCategory = function createSubCategory(req, res, next) {
 const getSubCategoryById = function getSubCategoryById(req, res, next) {
     SubCategory.findOne(req.body)
         .populate('category')
-        .then(sub_category =>
-            res.send(sub_category)
+        .then(subCategory =>
+            res.send(subCategory)
         )
         .catch(err => {
             res.status(500).send({

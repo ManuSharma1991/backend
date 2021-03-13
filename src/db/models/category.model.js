@@ -2,18 +2,18 @@ var mongoose = require("mongoose");
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const CategorySchema = new mongoose.Schema({
-    category_id: {
+    categoryId: {
         type: Number,
     },
-    category_name: {
+    categoryName: {
         type: String,
         required: true
     },
-    user_created: {
+    userCreated: {
         type: Boolean,
         default: true
     },
-    sub_category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' }],
+    subCategory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' }],
     allocation: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Allocation' }],
     transaction: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction' }],
     user: {
@@ -25,7 +25,7 @@ const CategorySchema = new mongoose.Schema({
 CategorySchema.set('timestamps', true)
 
 CategorySchema.plugin(AutoIncrement, {
-    inc_field: 'category_id',
+    inc_field: 'categoryId',
     start_seq: 1001,
     inc_amount: 1
 })

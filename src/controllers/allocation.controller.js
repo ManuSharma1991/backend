@@ -1,16 +1,17 @@
 const Allocation = require("../db/models/allocation.model");
 const Budget = require("../db/models/budget.model");
 const Category = require("../db/models/category.model");
-const SubCategory = require("../db/models/sub_category.model");
+const SubCategory = require("../db/models/subCategory.model");
 const User = require("../db/models/user.model");
 const Promise = require('bluebird');
+const mongoose = require('mongoose');
 
 const getAllocation = function getAllocation(req, res, next) {
     Allocation.find({}, '-__v -_id')
         .populate('budget', 'budgetId budgetName -_id')
-        .populate('user', 'userId user_name -_id')
-        .populate('category', ' category_id category_name -_id')
-        .populate('sub_category', 'sub_category_id sub_category_name -_id')
+        .populate('user', 'userId userName -_id')
+        .populate('category', ' categoryId categoryName -_id')
+        .populate('subCategory', 'subCategoryId subCategoryName -_id')
         .then(allocation => {
             res.send(allocation);
         })
@@ -40,13 +41,13 @@ const createAllocation = function createAllocation(req, res, next) {
                 new_allocation.category = category._id;
             });
 
-        SubCategory.findOne(allocation.sub_category)
-            .then(sub_category => {
-                new_allocation.sub_category = sub_category._id;
+        SubCategory.findOne(allocation.subCategory)
+            .then(subCategory => {
+                new_allocation.subCategory = subCategory._id;
             });
 
 
-        new_allocation.remaining_per_sub_category = new_allocation.allocated_per_sub_category - new_allocation.spent_per_sub_category
+        new_allocation.remainingPerSubCategory = new_allocation.allocatedPerSubCategory - new_allocation.spentPerSubCategory
         await new_allocation.save(new_allocation)
             .then(allocation => {
                 response.push(allocation);
@@ -64,28 +65,39 @@ const createAllocation = function createAllocation(req, res, next) {
 
 }
 
-const getAllocationByMonth = function getAllocationByMonth(req, res, next) {
-    Allocation.find(req.body, '-__v -_id')
-        .populate('budget', 'budgetId budgetName -_id')
-        .populate('user', 'userId user_name -_id')
-        .populate('category', ' category_id category_name -_id')
-        .populate('sub_category', 'sub_category_id sub_category_name -_id')
-        .then(allocation => {
-            res.send(allocation);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving budget."
-            });
+const getAllocationByMonthAndBudget = function getAllocationByMonthAndBudget(req, res, next) {
+    console.log(req.body.allocation)
+    Budget.findOne(req.body.budget)
+        .then(budget => {
+            console.log(budget);
+            Allocation.find(
+                {
+                    allocationMonth: req.body.allocation.allocationMonth,
+                    budget: mongoose.Types.ObjectId(budget._id)
+
+                }
+                , '-createdAt -updatedAt -__v -_id')
+                .populate('budget', 'budgetId budgetName -_id')
+                .populate('user', 'userId userName -_id')
+                .populate('category', ' categoryId categoryName -_id')
+                .populate('subCategory', 'subCategoryId subCategoryName -_id')
+                .then(allocation => {
+                    res.send(allocation);
+                })
+                .catch(err => {
+                    res.status(500).send({
+                        message: err.message || "Some error occurred while retrieving budget."
+                    });
+                });
         });
 }
 
 const getAllocationByMonthAsRaw = function getAllocationByMonthAsRaw(req, res, next) {
     Allocation.find(req.body, '-__v -_id')
         .populate('budget', 'budgetId budgetName -_id')
-        .populate('user', 'userId user_name -_id')
-        .populate('category', ' category_id category_name -_id')
-        .populate('sub_category', 'sub_category_id sub_category_name -_id')
+        .populate('user', 'userId userName -_id')
+        .populate('category', ' categoryId categoryName -_id')
+        .populate('subCategory', 'subCategoryId subCategoryName -_id')
         .then(allocation => {
             res.send(allocation);
         })
@@ -96,4 +108,4 @@ const getAllocationByMonthAsRaw = function getAllocationByMonthAsRaw(req, res, n
         });
 }
 
-module.exports = { getAllocation, createAllocation, getAllocationByMonthAsRaw }
+module.exports = { getAllocation, createAllocation, getAllocationByMonthAndBudget }

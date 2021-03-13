@@ -2,14 +2,14 @@ var mongoose = require("mongoose");
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const SubCategorySchema = new mongoose.Schema({
-    sub_category_id: {
+    subCategoryId: {
         type: Number,
     },
-    sub_category_name: {
+    subCategoryName: {
         type: String,
         required: true
     },
-    sub_user_created: {
+    userCreated: {
         type: Boolean,
         default: true
     },
@@ -26,7 +26,7 @@ const SubCategorySchema = new mongoose.Schema({
 SubCategorySchema.set('timestamps', true);
 
 SubCategorySchema.plugin(AutoIncrement, {
-    inc_field: 'sub_category_id',
+    inc_field: 'subCategoryId',
     start_seq: 10001,
     inc_amount: 1
 })

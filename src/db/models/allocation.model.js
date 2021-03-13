@@ -2,30 +2,30 @@ var mongoose = require("mongoose");
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const AllocationSchema = new mongoose.Schema({
-    allocation_id: {
+    allocationId: {
         type: Number,
         index: true
     },
-    allocation_month: {
+    allocationMonth: {
         type: Number,
         index: true,
     },
-    allocated_per_sub_category: {
+    allocatedPerSubCategory: {
         type: Number,
         required: true
     },
-    spent_per_sub_category: {
+    spentPerSubCategory: {
         type: Number,
         required: true
     },
-    remaining_per_sub_category: Number,
+    remainingPerSubCategory: Number,
     budget: {
         type: mongoose.Schema.Types.ObjectId, ref: 'Budget'
     },
     category: {
         type: mongoose.Schema.Types.ObjectId, ref: 'Category'
     },
-    sub_category: {
+    subCategory: {
         type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory'
     },
     user: {
@@ -36,7 +36,7 @@ const AllocationSchema = new mongoose.Schema({
 AllocationSchema.set('timestamps', true)
 
 AllocationSchema.plugin(AutoIncrement, {
-    inc_field: 'allocation_id',
+    inc_field: 'allocationId',
     start_seq: 1000001,
     inc_amount: 1
 })

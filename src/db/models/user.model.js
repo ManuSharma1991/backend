@@ -5,18 +5,18 @@ const UserSchema = new mongoose.Schema({
     userId: {
         type: Number,
     },
-    user_name: {
+    userName: {
         type: String,
         required: true
     },
-    user_mobile_no: {
+    userMobileNo: {
         type: Number,
         required: true
     },
     budget: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Budget' }],
     account: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Account' }],
     category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
-    sub_category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' }],
+    subCategory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' }],
     allocation: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Allocation' }],
     transaction: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction' }],
 });

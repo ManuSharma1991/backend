@@ -2,6 +2,7 @@ const Account = require('../db/models/account.model');
 const AccountTransaction = require('../db/models/account_transaction.model');
 const User = require('../db/models/user.model');
 const Promise = require('bluebird');
+const Transaction = require('../db/models/transaction.model');
 
 const getAccount = function getAccount(req, res, next) {
     Account.find()
@@ -48,7 +49,7 @@ const getAccountById = function getAccountById(req, res, next) {
     Account.findOne(req.body)
         .populate('user')
         .then(async function (account) {
-            await AccountTransaction.find({ 'account': account._id })
+            await Transaction.find({ 'account': account._id })
                 .then(async function (account_transaction_data) {
                     await account_transaction_data.forEach(account_transaction => {
                         account.account_transaction.push(account_transaction);

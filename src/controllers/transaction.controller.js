@@ -1,7 +1,7 @@
 const Allocation = require("../db/models/allocation.model");
 const Budget = require("../db/models/budget.model");
 const Category = require("../db/models/category.model");
-const SubCategory = require("../db/models/sub_category.model");
+const SubCategory = require("../db/models/subCategory.model");
 const Transaction = require("../db/models/transaction.model");
 const AccountTransaction = require("../db/models/account_transaction.model");
 const User = require("../db/models/user.model");
@@ -26,9 +26,9 @@ const recordTransaction = function recordTransaction(req, res, next) {
             new_transaction.category = category._id;
         });
 
-    SubCategory.findOne(req.body.sub_category)
-        .then(sub_category => {
-            new_transaction.sub_category = sub_category._id;
+    SubCategory.findOne(req.body.subCategory)
+        .then(subCategory => {
+            new_transaction.subCategory = subCategory._id;
         });
 
     Account.findOne(req.body.account)
@@ -43,15 +43,15 @@ const recordTransaction = function recordTransaction(req, res, next) {
                     user: mongoose.Types.ObjectId(transaction.user),
                     budget: mongoose.Types.ObjectId(transaction.budget),
                     category: mongoose.Types.ObjectId(transaction.category),
-                    sub_category: mongoose.Types.ObjectId(transaction.sub_category)
+                    subCategory: mongoose.Types.ObjectId(transaction.subCategory)
                 }
             )
                 .then(allocation => {
-                    allocation.spent_per_sub_category = allocation.spent_per_sub_category + transaction.transaction_value
-                    if (allocation.spent_per_sub_category > allocation.allocated_per_sub_category) {
-                        allocation.remaining_per_sub_category = 0
+                    allocation.spentPerSubCategory = allocation.spentPerSubCategory + transaction.transactionValue
+                    if (allocation.spentPerSubCategory > allocation.allocatedPerSubCategory) {
+                        allocation.remainingPerSubCategory = 0
                     } else {
-                        allocation.remaining_per_sub_category = allocation.allocated_per_sub_category - allocation.spent_per_sub_category
+                        allocation.remainingPerSubCategory = allocation.allocatedPerSubCategory - allocation.spentPerSubCategory
                     }
                     allocation.save();
                 })
@@ -70,10 +70,10 @@ const recordTransaction = function recordTransaction(req, res, next) {
 const getTransactions = function getTransactions(req, res, next) {
     Transaction.find({}, '-__v -_id')
         .populate('budget', 'budgetId budgetName -_id')
-        .populate('user', 'userId user_name -_id')
-        .populate('category', ' category_id category_name -_id')
-        .populate('sub_category', 'sub_category_id sub_category_name -_id')
-        .populate('account', 'account_id account_name -_id')
+        .populate('user', 'userId userName -_id')
+        .populate('category', ' categoryId categoryName -_id')
+        .populate('subCategory', 'subCategoryId subCategoryName -_id')
+        .populate('account', 'accountId accountName -_id')
         .then(transaction => {
             res.send(transaction);
         })
@@ -86,7 +86,7 @@ const getTransactions = function getTransactions(req, res, next) {
 
 async function createNewAccountTransaction(transaction) {
     const transaction_data = await new Transaction(transaction)
-        .populate('sub_category')
+        .populate('subCategory')
         .populate('account')
         .execPopulate()
     let new_account_transaction = new AccountTransaction({});
@@ -96,10 +96,10 @@ async function createNewAccountTransaction(transaction) {
             new_account_transaction.account = account._id
         });
 
-    new_account_transaction.account_transaction_date = transaction_data.transaction_date
-    new_account_transaction.account_transaction_value = transaction_data.transaction_value
-    new_account_transaction.account_transaction_credited_to = transaction_data.sub_category.sub_category_name
-    new_account_transaction.account_transaction_description = transaction_data.transaction_description
+    new_account_transaction.account_transaction_date = transaction_data.transactionDate
+    new_account_transaction.account_transaction_value = transaction_data.transactionValue
+    new_account_transaction.account_transaction_credited_to = transaction_data.subCategory.subCategoryName
+    new_account_transaction.account_transaction_description = transaction_data.transactionDescription
     await new_account_transaction.save(new_account_transaction)
         .then(async function (account_transaction) {
             // console.log(await account_transaction.populate('account').execPopulate());
@@ -114,13 +114,13 @@ async function createNewAccountTransaction(transaction) {
 
 async function debitAccountOnTransaction(transaction) {
     const transaction_data = await new Transaction(transaction)
-        .populate('sub_category')
+        .populate('subCategory')
         .populate('account')
         .execPopulate()
     Account.findOne(transaction_data.account)
         .then(async function (account) {
-            account.account_spent_amount += transaction_data.transaction_value
-            account.account_current_balance = account.account_initial_balance - account.account_spent_amount
+            account.accountSpentAmount += transaction_data.transactionValue
+            account.accountCurrentBalance = account.accountInitialBalance - account.accountSpentAmount
             await account.save();
         });
 }
