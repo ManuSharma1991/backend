@@ -56,7 +56,7 @@ const createBudget = async function createBudget(req, res, next) {
                 });
             });
     } else {
-        res.status(500).send(ER_1001_USER_NOT_FOUND)
+        res.send(ER_1001_USER_NOT_FOUND)
     }
 
 
