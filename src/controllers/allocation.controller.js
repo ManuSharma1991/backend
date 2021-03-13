@@ -7,8 +7,8 @@ const Promise = require('bluebird');
 
 const getAllocation = function getAllocation(req, res, next) {
     Allocation.find({}, '-__v -_id')
-        .populate('budget', 'budget_id budget_name -_id')
-        .populate('user', 'user_id user_name -_id')
+        .populate('budget', 'budgetId budgetName -_id')
+        .populate('user', 'userId user_name -_id')
         .populate('category', ' category_id category_name -_id')
         .populate('sub_category', 'sub_category_id sub_category_name -_id')
         .then(allocation => {
@@ -66,8 +66,8 @@ const createAllocation = function createAllocation(req, res, next) {
 
 const getAllocationByMonth = function getAllocationByMonth(req, res, next) {
     Allocation.find(req.body, '-__v -_id')
-        .populate('budget', 'budget_id budget_name -_id')
-        .populate('user', 'user_id user_name -_id')
+        .populate('budget', 'budgetId budgetName -_id')
+        .populate('user', 'userId user_name -_id')
         .populate('category', ' category_id category_name -_id')
         .populate('sub_category', 'sub_category_id sub_category_name -_id')
         .then(allocation => {
@@ -82,8 +82,8 @@ const getAllocationByMonth = function getAllocationByMonth(req, res, next) {
 
 const getAllocationByMonthAsRaw = function getAllocationByMonthAsRaw(req, res, next) {
     Allocation.find(req.body, '-__v -_id')
-        .populate('budget', 'budget_id budget_name -_id')
-        .populate('user', 'user_id user_name -_id')
+        .populate('budget', 'budgetId budgetName -_id')
+        .populate('user', 'userId user_name -_id')
         .populate('category', ' category_id category_name -_id')
         .populate('sub_category', 'sub_category_id sub_category_name -_id')
         .then(allocation => {

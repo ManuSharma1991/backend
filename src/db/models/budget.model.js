@@ -2,18 +2,18 @@ var mongoose = require("mongoose");
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const BudgetSchema = new mongoose.Schema({
-    budget_id: {
+    budgetId: {
         type: Number,
     },
-    budget_name: {
+    budgetName: {
         type: String,
         required: true
     },
-    budget_currency: {
+    budgetCurrency: {
         type: String,
         required: true
     },
-    user_id: {
+    userId: {
         type: Number
     },
     user: {
@@ -26,7 +26,7 @@ const BudgetSchema = new mongoose.Schema({
 BudgetSchema.set('timestamps', true)
 
 BudgetSchema.plugin(AutoIncrement, {
-    inc_field: 'budget_id',
+    inc_field: 'budgetId',
     start_seq: 1,
     inc_amount: 1
 })

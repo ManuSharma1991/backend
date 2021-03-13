@@ -55,7 +55,7 @@ const recordTransaction = function recordTransaction(req, res, next) {
                     }
                     allocation.save();
                 })
-            await createNewAccountTransaction(transaction)
+            // await createNewAccountTransaction(transaction)
             await debitAccountOnTransaction(transaction)
             res.send(transaction);
         })
@@ -69,8 +69,8 @@ const recordTransaction = function recordTransaction(req, res, next) {
 
 const getTransactions = function getTransactions(req, res, next) {
     Transaction.find({}, '-__v -_id')
-        .populate('budget', 'budget_id budget_name -_id')
-        .populate('user', 'user_id user_name -_id')
+        .populate('budget', 'budgetId budgetName -_id')
+        .populate('user', 'userId user_name -_id')
         .populate('category', ' category_id category_name -_id')
         .populate('sub_category', 'sub_category_id sub_category_name -_id')
         .populate('account', 'account_id account_name -_id')

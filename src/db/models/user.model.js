@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const UserSchema = new mongoose.Schema({
-    user_id: {
+    userId: {
         type: Number,
     },
     user_name: {
@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
 UserSchema.set('timestamps', true)
 
 UserSchema.plugin(AutoIncrement, {
-    inc_field: 'user_id',
+    inc_field: 'userId',
     start_seq: 90000001,
     inc_amount: 1
 })

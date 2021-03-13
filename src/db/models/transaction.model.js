@@ -19,6 +19,7 @@ const TransactionSchema = new mongoose.Schema({
     account: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
     sub_category: { type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' },
+    account: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
 });
 
 
