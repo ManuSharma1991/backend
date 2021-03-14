@@ -119,8 +119,8 @@ async function debitAccountOnTransaction(transaction) {
         .execPopulate()
     Account.findOne(transaction_data.account)
         .then(async function (account) {
-            account.accountSpentAmount += transaction_data.transactionValue
-            account.accountCurrentBalance = account.accountInitialBalance - account.accountSpentAmount
+            account.accountSpent += transaction_data.transactionValue
+            account.accountBalance = account.accountTotal - account.accountSpent
             await account.save();
         });
 }

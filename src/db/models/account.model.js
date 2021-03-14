@@ -13,14 +13,14 @@ const AccountSchema = new mongoose.Schema({
     accountType: {
         type: String
     },
-    accountInitialBalance: {
+    accountTotal: {
         type: Number,
     },
-    accountCurrentBalance: {
+    accountBalance: {
         type: Number,
         default: 0
     },
-    accountSpentAmount: {
+    accountSpent: {
         type: Number,
         default: 0
     },
