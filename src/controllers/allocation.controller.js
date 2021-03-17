@@ -66,10 +66,8 @@ const createAllocation = function createAllocation(req, res, next) {
 }
 
 const getAllocationByMonthAndBudget = function getAllocationByMonthAndBudget(req, res, next) {
-    console.log(req.body.allocation)
     Budget.findOne(req.body.budget)
         .then(budget => {
-            console.log(budget);
             Allocation.find(
                 {
                     allocationMonth: req.body.allocation.allocationMonth,

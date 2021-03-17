@@ -14,12 +14,15 @@ const TransactionSchema = new mongoose.Schema({
     transactionDescription: {
         type: String
     },
+    transactionType: {
+        type: String
+    },
     budget: { type: mongoose.Schema.Types.ObjectId, ref: 'Budget' },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    account: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
+    fromAccount: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
+    toAccount: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
     subCategory: { type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' },
-    account: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' },
 });
 
 

@@ -78,10 +78,8 @@ const getBudgetById = function getBudgetById(req, res, next) {
 const createAllocation = async function createAllocation(budget) {
     SubCategory.find()
         .then(async function (subCategoryData) {
-            console.log(subCategoryData)
             await Promise.each(subCategoryData, async function (subCategory) {
                 let new_allocation = new Allocation({});
-                console.log('1')
                 new_allocation.user = subCategory.user;
                 new_allocation.category = subCategory.category;
                 new_allocation.subCategory = subCategory;
