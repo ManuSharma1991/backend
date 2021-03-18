@@ -5,73 +5,55 @@ const SubCategory = require('../db/models/subCategory.model');
 const User = require('../db/models/user.model');
 
 
-const getUser = function getUSer(req, res, next) {
-    User.find()
-        .then(user => {
-            res.send(user);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving budget."
-            });
+getUser = async (req, res, next) => {
+    try {
+        const user = await User.find();
+        res.send(user);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving budget."
         });
+    }
 }
 
 
-const createUser = function createUser(req, res, next) {
-    const new_user = new User(req.body);
-
-    new_user.save(new_user)
-        .then(user => {
-            res.send(user);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving budget."
-            });
+createUser = async (req, res, next) => {
+    try {
+        const user = await User.save(req.body);
+        res.send(user);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving budget."
         });
+    }
 }
 
-const getUserById = function getUserById(req, res, next) {
-    User.findOne(req.body)
-        .then(async function (user) {
-            await populateUserData(user)
-            res.send(user)
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving budget."
-            });
+getUserById = async (req, res, next) => {
+    try {
+        const user = await User.findOne(req.body).select("-__v").select("-createdAt").select("-updatedAt");
+        await populateUserData(user);
+        res.send(user);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving budget."
         });
+    }
 }
 
 
-async function populateUserData(user) {
-    await Budget.find({ 'user': user._id })
-        .then(async function (budget_data) {
-            await budget_data.forEach(budget => {
-                user.budget.push(budget);
-            })
-        })
-    await Account.find({ 'user': user._id })
-        .then(async function (account_data) {
-            await account_data.forEach(account => {
-                user.account.push(account);
-            })
-        })
-    await Category.find({ 'user': user._id })
-        .then(async function (category_data) {
-            await category_data.forEach(category => {
-                user.category.push(category);
-            })
-        })
-    await SubCategory.find({ 'user': user._id })
-        .populate('category')
-        .then(async function (subCategory) {
-            await subCategory.forEach(s_category => {
-                user.subCategory.push(s_category);
-            })
-        })
+populateUserData = async (user) => {
+    const budgets = await Budget.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
+    user.budget = budgets;
+
+    const accounts = await Account.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
+    user.account = accounts;
+
+
+    const categories = await Category.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
+    user.category = categories;
+
+    const subCategories = await SubCategory.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 }).populate('category');
+    user.subCategory = subCategories;
 }
 
 module.exports = { getUser, createUser, getUserById }
