@@ -1,7 +1,9 @@
 const Account = require('../db/models/account.model');
+const Allocation = require('../db/models/allocation.model');
 const Budget = require('../db/models/budget.model');
 const Category = require('../db/models/category.model');
 const SubCategory = require('../db/models/subCategory.model');
+const Transaction = require('../db/models/transaction.model');
 const User = require('../db/models/user.model');
 
 
@@ -30,7 +32,7 @@ createUser = async (req, res, next) => {
 
 getUserById = async (req, res, next) => {
     try {
-        const user = await User.findOne(req.body).select("-__v").select("-createdAt").select("-updatedAt");
+        const user = await User.findOne(req.body).select("-__v -createdAt -updatedAt");
         await populateUserData(user);
         res.send(user);
     } catch (err) {
@@ -54,6 +56,12 @@ populateUserData = async (user) => {
 
     const subCategories = await SubCategory.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 }).populate('category');
     user.subCategory = subCategories;
+
+    const allocations = await Allocation.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
+    user.allocation = allocations;
+
+    const transactions = await Transaction.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
+    user.transaction = transactions;
 }
 
 module.exports = { getUser, createUser, getUserById }
