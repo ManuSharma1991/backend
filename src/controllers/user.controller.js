@@ -58,17 +58,20 @@ populateUserData = async (user) => {
     const subCategories = await SubCategory.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 }).populate('category');
     user.subCategory = subCategories;
 
-    const allocations = await Allocation.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 }).populate('category').populate('subCategory');
-    const modified_allocations = allocations.map(getBudgetId)
-    user.allocation = modified_allocations;
-    console.log('1')
+    const allocations = await Allocation.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 })
+        .populate('budget', 'budgetId budgetName -_id')
+        .populate('user', 'userId userName -_id')
+        .populate('category', ' categoryId categoryName -_id')
+        .populate('subCategory', 'subCategoryId subCategoryName -_id')
+
+    user.allocation = allocations;
 
     const transactions = await Transaction.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
     user.transaction = transactions;
 }
 
-function getBudgetId(allocation) {
-    Budget.findById(allocation.budget)
+async function getBudgetId(allocation) {
+    await Budget.findById(allocation.budget)
         .then(budget => {
             console.log(budget);
             allocation.budget = budget.budgetId;
