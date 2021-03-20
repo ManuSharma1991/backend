@@ -66,7 +66,13 @@ populateUserData = async (user) => {
 
     user.allocation = allocations;
 
-    const transactions = await Transaction.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
+    const transactions = await Transaction.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 })
+        .populate('budget', 'budgetId budgetName -_id')
+        .populate('user', 'userId userName -_id')
+        .populate('category', ' categoryId categoryName -_id')
+        .populate('subCategory', 'subCategoryId subCategoryName -_id')
+        .populate('toAccount', 'accountName accountId  -_id')
+        .populate('fromAccount', 'accountName accountId  -_id')
     user.transaction = transactions;
 }
 
