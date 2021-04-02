@@ -31,8 +31,7 @@ createUser = async (req, res, next) => {
             const new_category = new Category(element.category)
             new_category._id = await getNextSequenceValue("category")
 
-            const user_found = await User.findOne({ '_id': user._id })
-            new_category.user = user_found._id;
+            new_category.user = user._id;
 
             const category = await new_category.save();
 
@@ -41,8 +40,7 @@ createUser = async (req, res, next) => {
                 const new_sub_category = new SubCategory(sub_category.subCategory)
                 new_sub_category._id = await getNextSequenceValue("subCategory")
 
-                const category_found = await Category.findOne({ '_id': new_category._id })
-                new_sub_category.category = category_found._id;
+                new_sub_category.category = category._id;
 
                 new_sub_category.user = user_found._id;
 
