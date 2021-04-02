@@ -65,7 +65,7 @@ const createBudget = async function createBudget(req, res, next) {
 }
 
 const getBudgetById = function getBudgetById(req, res, next) {
-    Budget.findById(req.body._id)
+    Budget.findById(req.params.id)
         .populate('user', '_id userName')
         .then(async budget_n => {
 

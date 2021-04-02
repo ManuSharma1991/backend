@@ -34,7 +34,7 @@ const createCategory = async function createCategory(req, res, next) {
 }
 
 const getCategoryById = function getCategoryById(req, res, next) {
-    Category.findById(req.body._id)
+    Category.findById(req.params.id)
         .populate('user', '_id userName')
         .then(async function (category) {
             await SubCategory.find({ 'category': category._id })

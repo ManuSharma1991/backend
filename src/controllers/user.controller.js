@@ -59,7 +59,7 @@ createUser = async (req, res, next) => {
 
 getUserById = async (req, res, next) => {
     try {
-        const user = await User.findById(Number(req.body._id)).select("-__v -createdAt -updatedAt");
+        const user = await User.findById(Number(req.params.id)).select("-__v -createdAt -updatedAt");
         await populateUserData(user);
         res.send(user);
     } catch (err) {

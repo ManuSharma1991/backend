@@ -35,7 +35,7 @@ const createSubCategory = async function createSubCategory(req, res, next) {
 
 
 const getSubCategoryById = function getSubCategoryById(req, res, next) {
-    SubCategory.findById(req.body._id)
+    SubCategory.findById(req.params.id)
         .populate('category')
         .populate('user')
         .then(subCategory =>

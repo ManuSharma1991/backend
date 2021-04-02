@@ -70,7 +70,7 @@ const createAccount = async function createAccount(req, res, next) {
 }
 
 const getAccountById = function getAccountById(req, res, next) {
-    Account.findOne(req.body._id)
+    Account.findById(req.params.id)
         .populate('user', '_id userName')
         .then(async function (account) {
             await Transaction.find({ $or: [{ 'toAccount': account._id }, { 'fromAccount': account._id }] })
