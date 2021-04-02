@@ -1,6 +1,7 @@
 const Category = require('../db/models/category.model');
 const SubCategory = require('../db/models/subCategory.model');
 const User = require('../db/models/user.model');
+const { getNextSequenceValue } = require('../utilities/helper_functions');
 
 const getSubCategory = function getSubCategory(req, res, next) {
     SubCategory.find()
@@ -17,18 +18,9 @@ const getSubCategory = function getSubCategory(req, res, next) {
 }
 
 
-const createSubCategory = function createSubCategory(req, res, next) {
-    const new_sub_category = new SubCategory(req.body.subCategory);
-
-    Category.findOne(req.body.category)
-        .then(category => {
-            new_sub_category.category = category._id;
-        });
-
-    User.findOne(req.body.user)
-        .then(user => {
-            new_sub_category.user = user._id;
-        });
+const createSubCategory = async function createSubCategory(req, res, next) {
+    const new_sub_category = new SubCategory(req.body);
+    new_sub_category._id = await getNextSequenceValue("subCategory")
 
     new_sub_category.save(new_sub_category)
         .then(subCategory => {
@@ -43,8 +35,9 @@ const createSubCategory = function createSubCategory(req, res, next) {
 
 
 const getSubCategoryById = function getSubCategoryById(req, res, next) {
-    SubCategory.findOne(req.body)
+    SubCategory.findById(req.body._id)
         .populate('category')
+        .populate('user')
         .then(subCategory =>
             res.send(subCategory)
         )

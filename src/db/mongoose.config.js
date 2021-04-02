@@ -1,5 +1,6 @@
-let mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const { MONGO_URL } = require("../environments/environment.config");
+
 mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -11,5 +12,7 @@ mongoose.connect(MONGO_URL, {
   console.log('Could not connect to the database. Exiting now...', err);
   process.exit();
 });
+
+
 mongoose.pluralize(null);
 

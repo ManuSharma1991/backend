@@ -1,3 +1,63 @@
+startingData = [
+    {
+
+        category:
+        {
+            categoryName: 'Food'
+        },
+        subCategory: [
+            {
+                subCategory:
+                {
+                    subCategoryName: 'BreakFast'
+                }
+            },
+            {
+                subCategory:
+                {
+                    subCategoryName: 'Lunch'
+                }
+            },
+            {
+                subCategory:
+                {
+                    subCategoryName: 'Dinner'
+                }
+            }
+        ]
+    }
+]
+
+sequenceData = [
+    {
+        _id: "user",
+        sequenceValue: 90000000
+    },
+    {
+        _id: "budget",
+        sequenceValue: 0
+    },
+    {
+        _id: "account",
+        sequenceValue: 100
+    },
+    {
+        _id: "category",
+        sequenceValue: 1000
+    },
+    {
+        _id: "subCategory",
+        sequenceValue: 10000
+    },
+    {
+        _id: "transaction",
+        sequenceValue: 1000000000
+    },
+    {
+        _id: "allocation",
+        sequenceValue: 100000000
+    }
+]
 module.exports = {
     ER_1001_USER_NOT_FOUND: {
         error_message: 'User does not exist',
@@ -7,4 +67,6 @@ module.exports = {
     ER_1003_BUDGET_NOT_FOUND: 'Budget does not exist',
     ER_1004_CATEGORY_NOT_FOUND: 'Category does not exist',
     ER_1005_SUB_CATEGORY_NOT_FOUND: 'Sub Category does not exist',
+    startingData,
+    sequenceData
 }

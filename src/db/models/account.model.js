@@ -2,9 +2,8 @@ var mongoose = require("mongoose");
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const AccountSchema = new mongoose.Schema({
-    accountId: {
-        type: Number,
-        index: true
+    _id: {
+        type: Number
     },
     accountName: {
         type: String,
@@ -25,20 +24,20 @@ const AccountSchema = new mongoose.Schema({
         default: 0
     },
     user: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'User'
+        type: Number, ref: 'User'
     },
     account_transaction: [{
-        type: mongoose.Schema.Types.ObjectId, ref: 'Transaction'
+        type: Number, ref: 'Transaction'
     }]
-});
+}, { _id: false });
 
 AccountSchema.set('timestamps', true)
 
-AccountSchema.plugin(AutoIncrement, {
-    inc_field: 'accountId',
-    start_seq: 101,
-    inc_amount: 1
-})
+// AccountSchema.plugin(AutoIncrement, {
+//     inc_field: 'accountId',
+//     start_seq: 101,
+//     inc_amount: 1
+// })
 
 const Account = mongoose.model("Account", AccountSchema);
 

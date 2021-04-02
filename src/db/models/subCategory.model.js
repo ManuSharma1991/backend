@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const SubCategorySchema = new mongoose.Schema({
-    subCategoryId: {
+    _id: {
         type: Number,
     },
     subCategoryName: {
@@ -14,22 +14,22 @@ const SubCategorySchema = new mongoose.Schema({
         default: true
     },
     category: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'Category'
+        type: Number, ref: 'Category'
     },
     user: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'User'
+        type: Number, ref: 'User'
     },
-    allocation: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Allocation' }],
-    transaction: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction' }],
-});
+    allocation: [{ type: Number, ref: 'Allocation' }],
+    transaction: [{ type: Number, ref: 'Transaction' }],
+}, { _id: false });
 
 SubCategorySchema.set('timestamps', true);
 
-SubCategorySchema.plugin(AutoIncrement, {
-    inc_field: 'subCategoryId',
-    start_seq: 10001,
-    inc_amount: 1
-})
+// SubCategorySchema.plugin(AutoIncrement, {
+//     inc_field: 'subCategoryId',
+//     start_seq: 10001,
+//     inc_amount: 1
+// })
 
 
 const SubCategory = mongoose.model("SubCategory", SubCategorySchema);

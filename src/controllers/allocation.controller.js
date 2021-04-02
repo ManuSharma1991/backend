@@ -5,10 +5,11 @@ const SubCategory = require("../db/models/subCategory.model");
 const User = require("../db/models/user.model");
 const Promise = require('bluebird');
 const mongoose = require('mongoose');
+const { getNextSequenceValue } = require("../utilities/helper_functions");
 
 const getAllocation = function getAllocation(req, res, next) {
     Allocation.find({}, '-__v -_id')
-        .populate('budget', 'budgetId budgetName -_id')
+        .populate('budget', 'budgetName _id')
         .populate('user', 'userId userName -_id')
         .populate('category', ' categoryId categoryName -_id')
         .populate('subCategory', 'subCategoryId subCategoryName -_id')
@@ -25,35 +26,22 @@ const getAllocation = function getAllocation(req, res, next) {
 const createAllocation = function createAllocation(req, res, next) {
     let response = []
     Promise.each(req.body, async function (allocation) {
-        const new_allocation = new Allocation(allocation.allocation);
-        User.findOne(allocation.user)
-            .then(user => {
-                new_allocation.user = user._id;
-            });
-
-        Budget.findOne(allocation.budget)
-            .then(budget => {
-                new_allocation.budget = budget._id
-            });
-
-        Category.findOne(allocation.category)
-            .then(category => {
-                new_allocation.category = category._id;
-            });
-
-        SubCategory.findOne(allocation.subCategory)
-            .then(subCategory => {
-                new_allocation.subCategory = subCategory._id;
-            });
-
-
+        const new_allocation = new Allocation(allocation);
+        new_allocation._id = await getNextSequenceValue("allocation")
         new_allocation.remainingPerSubCategory = new_allocation.allocatedPerSubCategory - new_allocation.spentPerSubCategory
         await new_allocation.save(new_allocation)
-            .then(allocation => {
-                response.push(allocation);
+            .then(async created_allocation => {
+                const final_allocation_data = await created_allocation
+                    .populate('budget', 'budgetId budgetName -_id')
+                    .populate('user', 'userId userName -_id')
+                    .populate('category', ' categoryId categoryName -_id')
+                    .populate('subCategory', 'subCategoryId subCategoryName -_id').execPopulate()
+                console.log(final_allocation_data)
+                response[response.length + 1] = (final_allocation_data);
             })
     })
         .then(response => {
+            console.log(response)
             res.send(response)
         })
         .catch(err => {

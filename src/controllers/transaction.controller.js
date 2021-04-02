@@ -3,7 +3,6 @@ const Budget = require("../db/models/budget.model");
 const Category = require("../db/models/category.model");
 const SubCategory = require("../db/models/subCategory.model");
 const Transaction = require("../db/models/transaction.model");
-const AccountTransaction = require("../db/models/account_transaction.model");
 const User = require("../db/models/user.model");
 const mongoose = require('mongoose');
 const Account = require("../db/models/account.model");
@@ -89,31 +88,6 @@ const getTransactions = function getTransactions(req, res, next) {
         });
 }
 
-async function createNewAccountTransaction(transaction) {
-    const transaction_data = await new Transaction(transaction)
-        .populate('subCategory')
-        .populate('account')
-        .execPopulate()
-    let new_account_transaction = new AccountTransaction({});
-
-    Account.findOne(transaction_data.account)
-        .then(account => {
-            new_account_transaction.account = account._id
-        });
-
-    new_account_transaction.account_transaction_date = transaction_data.transactionDate
-    new_account_transaction.account_transaction_value = transaction_data.transactionValue
-    new_account_transaction.account_transaction_credited_to = transaction_data.subCategory.subCategoryName
-    new_account_transaction.account_transaction_description = transaction_data.transactionDescription
-    await new_account_transaction.save(new_account_transaction)
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving budget."
-            });
-        });
-
-}
-
 async function debitAccountOnTransaction(transaction) {
     const transaction_data = await new Transaction(transaction)
         .populate('subCategory')
@@ -122,7 +96,7 @@ async function debitAccountOnTransaction(transaction) {
 
 
     if (transaction.transactionType === 'income') {
-        await Account.findOne(transaction_data.toAccount)
+        await Account.findById(transaction_data.toAccount)
             .then(async function (account) {
                 account.accountBalance += transaction_data.transactionValue
                 account.accountTotal += transaction_data.transactionValue
@@ -131,7 +105,7 @@ async function debitAccountOnTransaction(transaction) {
     }
 
     else if (transaction.transactionType === 'expense') {
-        await Account.findOne(transaction_data.fromAccount)
+        await Account.findById(transaction_data.fromAccount)
             .then(async function (account) {
                 account.accountSpent += transaction_data.transactionValue
                 account.accountBalance = account.accountBalance - transaction_data.transactionValue
@@ -141,13 +115,13 @@ async function debitAccountOnTransaction(transaction) {
     }
 
     else if (transaction.transactionType === 'transfer') {
-        await Account.findOne(transaction_data.toAccount)
+        await Account.findById(transaction_data.toAccount)
             .then(async function (account) {
                 account.accountBalance += transaction_data.transactionValue
                 account.accountTotal += transaction_data.transactionValue
                 await account.save();
             });
-        await Account.findOne(transaction_data.fromAccount)
+        await Account.findById(transaction_data.fromAccount)
             .then(async function (account) {
                 account.accountSpent += transaction_data.transactionValue
                 account.accountBalance = account.accountBalance - transaction_data.transactionValue
