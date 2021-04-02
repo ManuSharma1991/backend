@@ -42,7 +42,7 @@ createUser = async (req, res, next) => {
 
                 new_sub_category.category = category._id;
 
-                new_sub_category.user = user_found._id;
+                new_sub_category.user = user._id;
 
                 const subCategory = await new_sub_category.save()
             });
@@ -69,33 +69,33 @@ getUserById = async (req, res, next) => {
 
 
 populateUserData = async (user) => {
-    const budgets = await Budget.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
+    const budgets = await Budget.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
     user.budget = budgets;
 
-    const accounts = await Account.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
+    const accounts = await Account.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
     user.account = accounts;
 
-    const categories = await Category.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
+    const categories = await Category.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
     user.category = categories;
 
-    const subCategories = await SubCategory.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 }).populate('category', ' _id categoryName ')
+    const subCategories = await SubCategory.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 }).populate('category', ' _id categoryName ')
     user.subCategory = subCategories;
 
-    const allocations = await Allocation.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 })
-        .populate('budget', 'budgetId budgetName -_id')
-        .populate('user', 'userId userName -_id')
-        .populate('category', ' categoryId categoryName -_id')
-        .populate('subCategory', 'subCategoryId subCategoryName -_id')
+    const allocations = await Allocation.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 })
+        .populate('budget', 'budgetId budgetName')
+        .populate('user', 'userId userName')
+        .populate('category', ' categoryId categoryName')
+        .populate('subCategory', 'subCategoryId subCategoryName')
 
     user.allocation = allocations;
 
-    const transactions = await Transaction.find({ 'user': user._id }, { _id: 0, __v: 0, createdAt: 0, updatedAt: 0, user: 0 })
-        .populate('budget', 'budgetId budgetName -_id')
-        .populate('user', 'userId userName -_id')
-        .populate('category', ' categoryId categoryName -_id')
-        .populate('subCategory', 'subCategoryId subCategoryName -_id')
-        .populate('toAccount', 'accountName accountId  -_id')
-        .populate('fromAccount', 'accountName accountId  -_id')
+    const transactions = await Transaction.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 })
+        .populate('budget', 'budgetId budgetName')
+        .populate('user', 'userId userName')
+        .populate('category', ' categoryId categoryName')
+        .populate('subCategory', 'subCategoryId subCategoryName')
+        .populate('toAccount', 'accountName accountId ')
+        .populate('fromAccount', 'accountName accountId ')
     user.transaction = transactions;
 }
 

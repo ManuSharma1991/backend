@@ -41,8 +41,8 @@ const createAccount = async function createAccount(req, res, next) {
     new_transaction.transactionDescription = 'Initial Amount'
     new_transaction.transactionType = 'income'
     new_transaction.fromAccount
-    new_transaction.category = 1007;
-    new_transaction.subCategory = 10015;
+    new_transaction.category = 1001;
+    new_transaction.subCategory = 10001;
     new_transaction.user = new_account.user;
 
     new_account.accountTotal = 0
@@ -57,7 +57,7 @@ const createAccount = async function createAccount(req, res, next) {
                     await transactionController.debitAccountOnTransaction(new_transaction)
                 })
 
-            await Account.findById(account._id).select('accountName _id')
+            await Account.findById(account._id)
                 .then(createdAccount => {
                     res.send(createdAccount);
                 })

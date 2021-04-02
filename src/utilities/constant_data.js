@@ -3,7 +3,8 @@ startingData = [
 
         category:
         {
-            categoryName: 'Food'
+            categoryName: 'Food',
+            categoryType: 'expense'
         },
         subCategory: [
             {
