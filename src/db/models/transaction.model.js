@@ -1,38 +1,45 @@
 var mongoose = require("mongoose");
-const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const TransactionSchema = new mongoose.Schema({
     _id: {
         type: Number,
     },
-    transactionDate: {
-        type: Date
+    date: {
+        type: Date,
+        required: true
     },
-    transactionValue: {
-        type: Number
+    value: {
+        type: Number,
+        required: true
     },
-    transactionDescription: {
-        type: String
+    description: {
+        type: String,
+        required: true
     },
-    transactionType: {
-        type: String
+    type: {
+        type: String,
+        required: true
     },
-    budget: { type: Number, ref: 'Budget' },
-    user: { type: Number, ref: 'User' },
-    fromAccount: { type: Number, ref: 'Account' },
-    toAccount: { type: Number, ref: 'Account' },
-    category: { type: Number, ref: 'Category' },
-    subCategory: { type: Number, ref: 'SubCategory' },
+    budget: {
+        type: Number,
+        ref: 'Budget'
+    },
+    fromAccount: {
+        type: Number,
+        ref: 'Account'
+    },
+    toAccount: {
+        type: Number,
+        ref: 'Account'
+    },
+    subCategory: {
+        type: Number,
+        ref: 'SubCategory'
+    },
 }, { _id: false });
 
 
 TransactionSchema.set('timestamps', true)
-
-// TransactionSchema.plugin(AutoIncrement, {
-//     inc_field: 'transactionId',
-//     start_seq: 100000001,
-//     inc_amount: 1
-// })
 
 const Transaction = mongoose.model("Transaction", TransactionSchema);
 

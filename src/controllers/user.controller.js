@@ -1,65 +1,97 @@
-const Account = require('../db/models/account.model');
 const Allocation = require('../db/models/allocation.model');
-const Budget = require('../db/models/budget.model');
 const Category = require('../db/models/category.model');
-const SubCategory = require('../db/models/subCategory.model');
 const Transaction = require('../db/models/transaction.model');
+const SubCategory = require('../db/models/subCategory.model');
 const User = require('../db/models/user.model');
-const Promise = require('bluebird');
+const { startingData } = require('../utilities/constant_data');
 const { getNextSequenceValue } = require('../utilities/helper_functions');
 
 
-getUser = async (req, res, next) => {
+const getUsers = async (req, res) => {
     try {
         const user = await User.find();
         res.send(user);
     } catch (err) {
         res.status(500).send({
-            message: err.message || "Some error occurred while retrieving budget."
+            message: err.message || "Some error occurred while retrieving users."
         });
     }
 }
 
 
-createUser = async (req, res, next) => {
+const createUser = async (req, res) => {
     try {
-        const newUser = new User(req.body);
-        newUser._id = await getNextSequenceValue("user")
-        const user = await newUser.save();
-        startingData.forEach(async element => {
+        const userId = await getNextSequenceValue("user");
+        const userCategories = [];
 
+        for (const element of startingData) {
             const new_category = new Category(element.category)
             new_category._id = await getNextSequenceValue("category")
+            new_category.user = userId;
+            new_category.subCategories = [];
 
-            new_category.user = user._id;
+            const sub_categories = [];
+            const sub_category_ids = [];
+            for (const sub_category of element.subCategory) {
+                sub_category._id = await getNextSequenceValue("subCategory")
+                sub_category.category = new_category._id;
+                sub_categories.push(sub_category);
+                sub_category_ids.push(sub_category._id);
+            }
+            new_category.subCategories = sub_category_ids;
+            await new_category.save();
+            await SubCategory.insertMany(sub_categories);
+            userCategories.push(new_category._id);
+        }
 
-            const category = await new_category.save();
-
-            element.subCategory.forEach(async sub_category => {
-
-                const new_sub_category = new SubCategory(sub_category.subCategory)
-                new_sub_category._id = await getNextSequenceValue("subCategory")
-
-                new_sub_category.category = category._id;
-
-                new_sub_category.user = user._id;
-
-                const subCategory = await new_sub_category.save()
+        const newUser = new User(req.body);
+        newUser._id = userId;
+        newUser.categories = userCategories;
+        const user = await newUser.save();
+        res.send(user);
+    } catch (err) {
+        console.log(err);
+        if (err.code === 11000) {
+            res.status(500).send({
+                message: "User with mobile number " + err.keyValue.userMobileNo + " already exists."
             });
-        });
-        res.send(user);
-    } catch (err) {
-        res.status(500).send({
-            message: err.message || "Some error occurred while retrieving budget."
-        });
+        } else {
+            res.status(500).send({
+                message: err.message || "Some error occurred while creating user."
+            });
+        }
     }
 }
 
-getUserById = async (req, res, next) => {
+const getUserById = async (req, res) => {
     try {
-        const user = await User.findById(Number(req.params.id)).select("-__v -createdAt -updatedAt");
-        await populateUserData(user);
-        res.send(user);
+        const user = await User.findById(Number(req.params.id)).select("-__v -createdAt -updatedAt")
+            .populate({ path: 'categories', select: '_id name type userCreated subCategories', populate: { path: 'subCategories', select: '_id name type userCreated category' } })
+            .populate({ path: 'budgets', select: '_id name currency transactions allocations' })
+            .populate('accounts', '_id name type total balance spent transactions');
+        if (user === null) {
+            res.status(404).send({
+                message: "User not found"
+            });
+        } else {
+            for (const budget of user.budgets) {
+                const allocations = await Allocation.find({ budget: budget._id });
+                const transactions = await Transaction.find({ budget: budget._id })
+                    .populate({ path: 'subCategory', select: '_id name type userCreated category', populate: { path: 'category', select: '_id name type userCreated' } })
+                    .populate('fromAccount', '_id name')
+                    .populate('toAccount', '_id name');
+                budget.allocations = allocations;
+                budget.transactions = transactions;
+            }
+            for (const account of user.accounts) {
+                const transactions = await Transaction.find({ $or: [{ toAccount: account._id }, { fromAccount: account._id }] })
+                    .populate({ path: 'subCategory', select: '_id name type userCreated category', populate: { path: 'category', select: '_id name type userCreated' } })
+                    .populate('fromAccount', '_id name')
+                    .populate('toAccount', '_id name');
+                account.transactions = transactions;
+            }
+            res.send(user);
+        }
     } catch (err) {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving budget."
@@ -67,46 +99,4 @@ getUserById = async (req, res, next) => {
     }
 }
 
-
-populateUserData = async (user) => {
-    const budgets = await Budget.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
-    user.budget = budgets;
-
-    const accounts = await Account.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
-    user.account = accounts;
-
-    const categories = await Category.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 });
-    user.category = categories;
-
-    const subCategories = await SubCategory.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 }).populate('category', ' _id categoryName ')
-    user.subCategory = subCategories;
-
-    const allocations = await Allocation.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 })
-        .populate('budget', 'budgetId budgetName')
-        .populate('user', 'userId userName')
-        .populate('category', ' categoryId categoryName')
-        .populate('subCategory', 'subCategoryId subCategoryName')
-
-    user.allocation = allocations;
-
-    const transactions = await Transaction.find({ 'user': user._id }, { __v: 0, createdAt: 0, updatedAt: 0, user: 0 })
-        .populate('budget', 'budgetId budgetName')
-        .populate('user', 'userId userName')
-        .populate('category', ' categoryId categoryName')
-        .populate('subCategory', 'subCategoryId subCategoryName')
-        .populate('toAccount', 'accountName accountId ')
-        .populate('fromAccount', 'accountName accountId ')
-    user.transaction = transactions;
-}
-
-async function getBudgetId(allocation) {
-    await Budget.findById(allocation.budget)
-        .then(budget => {
-            console.log(budget);
-            allocation.budget = budget.budgetId;
-        })
-    console.log('2')
-    return allocation
-}
-
-module.exports = { getUser, createUser, getUserById }
+module.exports = { getUsers, createUser, getUserById }

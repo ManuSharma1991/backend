@@ -1,35 +1,67 @@
-startingData = [
+const startingData = [
     {
-
         category:
         {
-            categoryName: 'Food',
-            categoryType: 'expense'
+            name: 'Opening Balance',
+            type: 'income',
+            userCreated: false
         },
         subCategory: [
             {
-                subCategory:
-                {
-                    subCategoryName: 'BreakFast'
-                }
+                name: 'Other',
+                type: 'income',
+                userCreated: false
+            }
+        ]
+    },
+    {
+        category:
+        {
+            name: 'Food',
+            type: 'expense',
+            userCreated: false
+        },
+        subCategory: [
+            {
+                name: 'BreakFast',
+                type: 'expense',
+                userCreated: false
             },
             {
-                subCategory:
-                {
-                    subCategoryName: 'Lunch'
-                }
+                name: 'Lunch',
+                type: 'expense',
+                userCreated: false
             },
             {
-                subCategory:
-                {
-                    subCategoryName: 'Dinner'
-                }
+                name: 'Dinner',
+                type: 'expense',
+                userCreated: false
+            }
+        ]
+    },
+    {
+        category:
+        {
+            name: 'Transportation',
+            type: 'expense',
+            userCreated: false
+        },
+        subCategory: [
+            {
+                name: 'Metro',
+                type: 'expense',
+                userCreated: false
+            },
+            {
+                name: 'Fuel',
+                type: 'expense',
+                userCreated: false
             }
         ]
     }
 ]
 
-sequenceData = [
+const sequenceData = [
     {
         _id: "user",
         sequenceValue: 90000000

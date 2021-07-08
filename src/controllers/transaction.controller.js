@@ -1,134 +1,73 @@
-const Allocation = require("../db/models/allocation.model");
-const Budget = require("../db/models/budget.model");
-const Category = require("../db/models/category.model");
-const SubCategory = require("../db/models/subCategory.model");
 const Transaction = require("../db/models/transaction.model");
-const User = require("../db/models/user.model");
-const mongoose = require('mongoose');
 const Account = require("../db/models/account.model");
+const { getNextSequenceValue } = require("../utilities/helper_functions");
 
-const recordTransaction = async function recordTransaction(req, res, next) {
-    const new_transaction = new Transaction(req.body.transaction);
 
-    await User.findOne(req.body.user)
-        .then(user => {
-            new_transaction.user = user._id;
+
+const getTransactionsOfAccount = async (req, res) => {
+    try {
+        const transactions = Transaction.find({ $or: [{ 'toAccount': req.params.account }, { 'fromAccount': req.params.account }] })
+            .populate('budget', 'budgetId budgetName -_id')
+            .populate({ path: 'subCategory', populate: { path: 'category' } })
+            .populate('fromAccount')
+            .populate('toAccount')
+        res.send(transactions);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Some error occurred while fetching transactions."
         });
-
-    await Budget.findOne(req.body.budget)
-        .then(budget => {
-            new_transaction.budget = budget._id
-        });
-
-    await Category.findOne(req.body.category)
-        .then(category => {
-            new_transaction.category = category._id;
-        });
-
-    await SubCategory.findOne(req.body.subCategory)
-        .then(subCategory => {
-            new_transaction.subCategory = subCategory._id;
-        });
-    await Account.findOne(req.body.toAccount)
-        .then(account => {
-            new_transaction.toAccount = account._id
-        });
-    await Account.findOne(req.body.fromAccount)
-        .then(account => {
-            new_transaction.fromAccount = account._id
-        });
-
-
-
-    new_transaction.save(new_transaction)
-        .then(async function (transaction) {
-            if (transaction.transactionType === 'expense') {
-                await Allocation.findOne(
-                    {
-                        user: mongoose.Types.ObjectId(transaction.user),
-                        budget: mongoose.Types.ObjectId(transaction.budget),
-                        category: mongoose.Types.ObjectId(transaction.category),
-                        subCategory: mongoose.Types.ObjectId(transaction.subCategory)
-                    }
-                )
-                    .then(allocation => {
-                        allocation.spentPerSubCategory = allocation.spentPerSubCategory + transaction.transactionValue
-                        if (allocation.spentPerSubCategory > allocation.allocatedPerSubCategory) {
-                            allocation.remainingPerSubCategory = 0
-                        } else {
-                            allocation.remainingPerSubCategory = allocation.allocatedPerSubCategory - allocation.spentPerSubCategory
-                        }
-                        allocation.save();
-                    })
-            }
-            await debitAccountOnTransaction(transaction)
-            res.send(transaction);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving budget."
-            });
-        });
+    }
 }
 
-const getTransactions = function getTransactions(req, res, next) {
-    Transaction.find({}, '-__v -_id')
-        .populate('budget', 'budgetId budgetName -_id')
-        .populate('user', 'userId userName -_id')
-        .populate('category', ' categoryId categoryName -_id')
-        .populate('subCategory', 'subCategoryId subCategoryName -_id')
-        .populate('account', 'accountId accountName -_id')
-        .then(transaction => {
-            res.send(transaction);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving budget."
-            });
+const recordTransaction = async (req, res) => {
+    try {
+        const new_transaction = new Transaction(req.body);
+        new_transaction._id = await getNextSequenceValue('transaction');
+
+        const transaction = await new_transaction.save(new_transaction);
+        await debitAccountOnTransaction(transaction);
+        const transaction_data = await transaction
+            .populate({ path: 'subCategory', select: '_id name type userCreated category', populate: { path: 'category', select: '_id name type userCreated' } })
+            .populate('fromAccount', '_id name')
+            .populate('toAccount', '_id name')
+            .populate('user', '_id')
+            .execPopulate()
+        res.send(transaction_data);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Some error occurred while creating budget."
         });
+    }
 }
 
-async function debitAccountOnTransaction(transaction) {
-    const transaction_data = await new Transaction(transaction)
-        .populate('subCategory')
-        .populate('account')
-        .execPopulate()
-
-
-    if (transaction.transactionType === 'income') {
-        await Account.findById(transaction_data.toAccount)
-            .then(async function (account) {
-                account.accountBalance += transaction_data.transactionValue
-                account.accountTotal += transaction_data.transactionValue
-                await account.save();
-            });
+const debitAccountOnTransaction = async (transaction) => {
+    if (transaction.type === 'income') {
+        const toAccount = await Account.findById(transaction.toAccount);
+        toAccount.balance += transaction.value;
+        toAccount.total += transaction.value;
+        await toAccount.save();
     }
 
-    else if (transaction.transactionType === 'expense') {
-        await Account.findById(transaction_data.fromAccount)
-            .then(async function (account) {
-                account.accountSpent += transaction_data.transactionValue
-                account.accountBalance = account.accountBalance - transaction_data.transactionValue
-                await account.save();
-            });
+    else if (transaction.type === 'expense') {
+        const fromAccount = await Account.findById(transaction.fromAccount);
+        fromAccount.spent += transaction.value;
+        fromAccount.balance = fromAccount.balance - transaction.value;
+        await fromAccount.save();
 
     }
 
-    else if (transaction.transactionType === 'transfer') {
-        await Account.findById(transaction_data.toAccount)
-            .then(async function (account) {
-                account.accountBalance += transaction_data.transactionValue
-                account.accountTotal += transaction_data.transactionValue
-                await account.save();
-            });
-        await Account.findById(transaction_data.fromAccount)
-            .then(async function (account) {
-                account.accountSpent += transaction_data.transactionValue
-                account.accountBalance = account.accountBalance - transaction_data.transactionValue
-                await account.save();
-            });
+    else if (transaction.type === 'transfer') {
+        const toAccount = await Account.findById(transaction.toAccount);
+        toAccount.balance += transaction.value;
+        toAccount.total += transaction.value;
+        await toAccount.save();
+
+        const fromAccount = await Account.findById(transaction.fromAccount);
+        fromAccount.spent += transaction.value;
+        fromAccount.balance = fromAccount.balance - transaction.value;
+        await fromAccount.save();
     }
 
 }
 
-module.exports = { recordTransaction, getTransactions, debitAccountOnTransaction }
+module.exports = { recordTransaction, getTransactionsOfAccount, debitAccountOnTransaction }

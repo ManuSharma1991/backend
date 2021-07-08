@@ -24,16 +24,17 @@ CounterSchema.set('timestamps', true)
 
 const Counter = mongoose.model("Counter", CounterSchema);
 
-// Counter.insertMany(sequenceData)
+const insertInitialData = async () => {
+    const userCounter = await Counter.findById("user");
+    if (userCounter === null) {
+        Counter.insertMany(sequenceData);
+    }
+}
+
+insertInitialData();
 
 const getNextSequenceValue = async function getNextSequenceValue(sequenceOfName) {
-    const sequenceDoc = await Counter.findByIdAndUpdate(sequenceOfName,
-        {
-            $inc: { sequenceValue: 1 },
-        },
-        {
-            new: true
-        });
+    const sequenceDoc = await Counter.findByIdAndUpdate(sequenceOfName, { $inc: { sequenceValue: 1 } }, { new: true });
     return sequenceDoc.sequenceValue;
 }
 module.exports = { checkUser, getNextSequenceValue }
