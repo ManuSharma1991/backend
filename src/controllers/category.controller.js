@@ -3,7 +3,7 @@ const { getNextSequenceValue } = require('../utilities/helper_functions');
 
 const getCategories = async (req, res) => {
     try {
-        const categories = await Category.find({ user: req.params.user }).populate('subCategories', '_id name type userCreated');
+        const categories = await Category.find({ user: req.params.user }).populate('subCategories', '_id name type userCreated budgetAllocated spent budgetAvailable');
         res.send(categories);
     } catch (err) {
         res.status(500).send({
@@ -29,7 +29,7 @@ const createCategory = async (req, res) => {
 
 const getCategoryById = async (req, res) => {
     try {
-        const category = await Category.findById(req.params.id).populate('user', '_id userName').populate('subCategories', '_id name type userCreated');
+        const category = await Category.findById(req.params.id).populate('user', '_id userName').populate('subCategories', '_id name type userCreated budgetAllocated spent budgetAvailable');
         res.send(category);
     } catch (err) {
         res.status(500).send({

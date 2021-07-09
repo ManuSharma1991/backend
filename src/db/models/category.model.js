@@ -16,6 +16,18 @@ const CategorySchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    budgetAllocated: {
+        type: Number,
+        default: 0
+    },
+    spent: {
+        type: Number,
+        default: 0
+    },
+    budgetAvailable: {
+        type: Number,
+        default: 0
+    },
     subCategories: [{
         type: Number,
         ref: 'SubCategory'

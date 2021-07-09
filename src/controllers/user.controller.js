@@ -66,7 +66,7 @@ const createUser = async (req, res) => {
 const getUserById = async (req, res) => {
     try {
         const user = await User.findById(Number(req.params.id)).select("-__v -createdAt -updatedAt")
-            .populate({ path: 'categories', select: '_id name type userCreated subCategories', populate: { path: 'subCategories', select: '_id name type userCreated category' } })
+            .populate({ path: 'categories', select: '_id name type userCreated subCategories budgetAllocated spent budgetAvailable', populate: { path: 'subCategories', select: '_id name type userCreated category budgetAllocated spent budgetAvailable' } })
             .populate({ path: 'budgets', select: '_id name currency transactions allocations' })
             .populate('accounts', '_id name type total balance spent transactions');
         if (user === null) {
@@ -77,15 +77,16 @@ const getUserById = async (req, res) => {
             for (const budget of user.budgets) {
                 const allocations = await Allocation.find({ budget: budget._id });
                 const transactions = await Transaction.find({ budget: budget._id })
-                    .populate({ path: 'subCategory', select: '_id name type userCreated category', populate: { path: 'category', select: '_id name type userCreated' } })
+                    .populate({ path: 'subCategory', select: '_id name type userCreated category', populate: { path: 'category', select: '_id name type userCreated budgetAllocated spent budgetAvailable' } })
                     .populate('fromAccount', '_id name')
-                    .populate('toAccount', '_id name');
+                    .populate('toAccount', '_id name')
+                    .populate('budget', '_id');
                 budget.allocations = allocations;
                 budget.transactions = transactions;
             }
             for (const account of user.accounts) {
                 const transactions = await Transaction.find({ $or: [{ toAccount: account._id }, { fromAccount: account._id }] })
-                    .populate({ path: 'subCategory', select: '_id name type userCreated category', populate: { path: 'category', select: '_id name type userCreated' } })
+                    .populate({ path: 'subCategory', select: '_id name type userCreated category', populate: { path: 'category', select: '_id name type userCreated budgetAllocated spent budgetAvailable' } })
                     .populate('fromAccount', '_id name')
                     .populate('toAccount', '_id name');
                 account.transactions = transactions;

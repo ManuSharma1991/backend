@@ -30,7 +30,7 @@ const recordTransaction = async (req, res) => {
             .populate({ path: 'subCategory', select: '_id name type userCreated category', populate: { path: 'category', select: '_id name type userCreated' } })
             .populate('fromAccount', '_id name')
             .populate('toAccount', '_id name')
-            .populate('user', '_id')
+            .populate('budget', '_id')
             .execPopulate()
         res.send(transaction_data);
     } catch (err) {
