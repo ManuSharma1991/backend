@@ -63,7 +63,7 @@ const debitAccountOnTransaction = async (transaction) => {
         await toAccount.save();
 
         const fromAccount = await Account.findById(transaction.fromAccount);
-        fromAccount.spent += transaction.value;
+        fromAccount.total -= transaction.value;
         fromAccount.balance = fromAccount.balance - transaction.value;
         await fromAccount.save();
     }

@@ -75,7 +75,9 @@ const getUserById = async (req, res) => {
             });
         } else {
             for (const budget of user.budgets) {
-                const allocations = await Allocation.find({ budget: budget._id });
+                const allocations = await Allocation.find({ budget: budget._id })
+                    .populate({ path: 'subCategory', select: '_id name type userCreated category', populate: { path: 'category', select: '_id name type userCreated budgetAllocated spent budgetAvailable' } })
+                    .populate('budget', '_id');
                 const transactions = await Transaction.find({ budget: budget._id })
                     .populate({ path: 'subCategory', select: '_id name type userCreated category', populate: { path: 'category', select: '_id name type userCreated budgetAllocated spent budgetAvailable' } })
                     .populate('fromAccount', '_id name')

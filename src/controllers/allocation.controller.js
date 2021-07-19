@@ -17,7 +17,10 @@ const createAllocation = async (req, res) => {
         const new_allocation = new Allocation(req.body);
         new_allocation._id = await getNextSequenceValue("allocation");
         const allocation = await new_allocation.save(new_allocation);
-        res.send(allocation);
+        const result = await allocation
+            .populate({ path: 'subCategory', select: '_id name type userCreated category', populate: { path: 'category', select: '_id name type userCreated budgetAllocated spent budgetAvailable' } })
+            .populate('budget', '_id').execPopulate();
+        res.send(result);
     } catch (err) {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving budget."
