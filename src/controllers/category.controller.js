@@ -1,4 +1,6 @@
 const Category = require('../db/models/category.model');
+const SubCategory = require('../db/models/subCategory.model');
+const User = require('../db/models/user.model');
 const { getNextSequenceValue } = require('../utilities/helper_functions');
 
 const getCategories = async (req, res) => {
@@ -18,7 +20,11 @@ const createCategory = async (req, res) => {
         const new_category = new Category(req.body);
         new_category._id = await getNextSequenceValue("category")
 
+        const user = await User.findById(req.body.user);
+        user.categories.push(new_category._id);
+
         const category = await new_category.save(new_category);
+        await user.save();
         res.send(category);
     } catch (err) {
         res.status(500).send({
@@ -38,4 +44,19 @@ const getCategoryById = async (req, res) => {
     }
 }
 
-module.exports = { getCategories, createCategory, getCategoryById }
+const deleteCategory = async (req, res) => {
+    try {
+        const category = await Category.findByIdAndUpdate(req.params.id, { deleted: true });
+        for (const subCategoryId of category.subCategories) {
+            await SubCategory.findByIdAndUpdate(subCategoryId, { deleted: true });
+        }
+        res.send({ _id: category._id });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving category."
+        });
+    }
+}
+
+module.exports = { getCategories, createCategory, getCategoryById, deleteCategory }

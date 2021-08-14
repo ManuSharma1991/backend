@@ -13,6 +13,10 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    darkMode: {
+        type: Boolean,
+        default: false
+    },
     budgets: [{ type: Number, ref: 'Budget' }],
     accounts: [{ type: Number, ref: 'Account' }],
     categories: [{ type: Number, ref: 'Category' }]

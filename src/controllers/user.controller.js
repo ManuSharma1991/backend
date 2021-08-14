@@ -66,7 +66,7 @@ const createUser = async (req, res) => {
 const getUserById = async (req, res) => {
     try {
         const user = await User.findById(Number(req.params.id)).select("-__v -createdAt -updatedAt")
-            .populate({ path: 'categories', select: '_id name type userCreated subCategories budgetAllocated spent budgetAvailable', populate: { path: 'subCategories', select: '_id name type userCreated category budgetAllocated spent budgetAvailable' } })
+            .populate({ path: 'categories', match: { deleted: false }, select: '_id name type userCreated subCategories budgetAllocated spent budgetAvailable', populate: { path: 'subCategories', match: { deleted: false }, select: '_id name type userCreated category budgetAllocated spent budgetAvailable' } })
             .populate({ path: 'budgets', select: '_id name currency transactions allocations' })
             .populate('accounts', '_id name type total balance spent transactions');
         if (user === null) {

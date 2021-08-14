@@ -4,13 +4,15 @@ const startingData = [
         {
             name: 'Opening Balance',
             type: 'income',
-            userCreated: false
+            userCreated: false,
+            deleted: false
         },
         subCategory: [
             {
                 name: 'Other',
                 type: 'income',
-                userCreated: false
+                userCreated: false,
+                deleted: false
             }
         ]
     },
@@ -19,23 +21,27 @@ const startingData = [
         {
             name: 'Food',
             type: 'expense',
-            userCreated: false
+            userCreated: false,
+            deleted: false
         },
         subCategory: [
             {
                 name: 'BreakFast',
                 type: 'expense',
-                userCreated: false
+                userCreated: false,
+                deleted: false
             },
             {
                 name: 'Lunch',
                 type: 'expense',
-                userCreated: false
+                userCreated: false,
+                deleted: false
             },
             {
                 name: 'Dinner',
                 type: 'expense',
-                userCreated: false
+                userCreated: false,
+                deleted: false
             }
         ]
     },
@@ -44,18 +50,21 @@ const startingData = [
         {
             name: 'Transportation',
             type: 'expense',
-            userCreated: false
+            userCreated: false,
+            deleted: false
         },
         subCategory: [
             {
                 name: 'Metro',
                 type: 'expense',
-                userCreated: false
+                userCreated: false,
+                deleted: false
             },
             {
                 name: 'Fuel',
                 type: 'expense',
-                userCreated: false
+                userCreated: false,
+                deleted: false
             }
         ]
     }

@@ -28,6 +28,10 @@ const CategorySchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    deleted: {
+        type: Boolean,
+        default: false
+    },
     subCategories: [{
         type: Number,
         ref: 'SubCategory'
