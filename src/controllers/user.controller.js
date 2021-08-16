@@ -102,4 +102,17 @@ const getUserById = async (req, res) => {
     }
 }
 
-module.exports = { getUsers, createUser, getUserById }
+const changeMode = async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const mode = req.body.mode;
+        await User.findByIdAndUpdate(userId, { darkMode: mode });
+        res.send({ mode: mode });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while retrieving budget."
+        });
+    }
+}
+
+module.exports = { getUsers, createUser, getUserById, changeMode }
